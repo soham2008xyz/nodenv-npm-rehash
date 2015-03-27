@@ -26,17 +26,17 @@ abs_dirname() {
   cd "$cwd"
 }
 
-@test "should not invoke rehash after npm freeze" {
+@test "should not invoke rehash after npm list" {
   stub npm "echo \"npm \$@\""
 
-  run nodenv-exec npm freeze
+  run nodenv-exec npm list
 
   unstub npm
 
   assert_success
   assert_output <<EOS
-NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm freeze
-npm freeze
+NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm list
+npm list
 EOS
 }
 
@@ -44,30 +44,30 @@ EOS
   stub nodenv-rehash "echo rehashed"
   stub npm "echo \"npm \$@\""
 
-  run nodenv-exec npm install -U tornado
+  run nodenv-exec npm install -g jshint
 
   unstub nodenv-rehash
   unstub npm
 
   assert_success
   assert_output <<EOS
-NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm install -U tornado
-npm install -U tornado
+NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm install -g jshint
+npm install -g jshint
 rehashed
 EOS
 }
 
-@test "should invoke rehash after unsuccessful npm install" {
+@test "should not invoke rehash after unsuccessful npm install" {
   stub npm "echo \"npm \$@\"; false"
 
-  run nodenv-exec npm install tornado
+  run nodenv-exec npm install -g jshint
 
   unstub npm
 
   assert_failure
   assert_output <<EOS
-NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm install tornado
-npm install tornado
+NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm install -g jshint
+npm install -g jshint
 EOS
 }
 
@@ -75,15 +75,15 @@ EOS
   stub nodenv-rehash "echo rehashed"
   stub npm "echo \"npm \$@\""
 
-  run nodenv-exec npm uninstall --yes tornado
+  run nodenv-exec npm uninstall -g jshint
 
   unstub nodenv-rehash
   unstub npm
 
   assert_success
   assert_output <<EOS
-NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm uninstall --yes tornado
-npm uninstall --yes tornado
+NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm uninstall -g jshint
+npm uninstall -g jshint
 rehashed
 EOS
 }
@@ -91,13 +91,13 @@ EOS
 @test "should not invoke rehash after unsuccessful npm uninstall" {
   stub npm "echo \"npm \$@\"; false"
 
-  run nodenv-exec npm uninstall tornado
+  run nodenv-exec npm uninstall -g jshint
 
   unstub npm
 
   assert_failure
   assert_output <<EOS
-NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm uninstall tornado
-npm uninstall tornado
+NODENV_BIN_PATH=${NODENV_NPM_REHASH_ROOT}/libexec exec -a npm ${NODENV_NPM_REHASH_ROOT}/libexec/npm uninstall -g jshint
+npm uninstall -g jshint
 EOS
 }
