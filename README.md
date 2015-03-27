@@ -5,6 +5,8 @@
 **Never run `nodenv rehash` again.** This nodenv plugin automatically
 runs `nodenv rehash` every time you install or uninstall an npm package.
 
+Forked from [`yyuu/pyenv-pip-rehash`](https://github.com/yyuu/pyenv-pip-rehash).
+
 ## Installation
 
 ### Installing as a nodenv plugin
