@@ -2,27 +2,27 @@
 
 load test_helper
 
-@test "installs pyenv-pip-rehash into PREFIX" {
+@test "installs nodenv-npm-rehash into PREFIX" {
   cd "$TMP"
   PREFIX="${PWD}/usr" run "${BATS_TEST_DIRNAME}/../install.sh"
   assert_success ""
 
   cd usr
 
-  assert [ -x libexec/pip ]
-  assert [ -f etc/pyenv.d/exec/pip.bash ]
+  assert [ -x libexec/npm ]
+  assert [ -f etc/nodenv.d/exec/npm.bash ]
 }
 
 @test "overwrites old installation" {
   cd "$TMP"
   mkdir -p libexec
-  touch libexec/pip
+  touch libexec/npm
 
   PREFIX="$PWD" run "${BATS_TEST_DIRNAME}/../install.sh"
   assert_success ""
 
-  assert [ -x libexec/pip ]
-  run grep "pyenv-rehash" libexec/pip
+  assert [ -x libexec/npm ]
+  run grep "nodenv-rehash" libexec/npm
   assert_success
 }
 
