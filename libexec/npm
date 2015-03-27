@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+[ -n "$NODENV_DEBUG" ] && set -x
+
+# Remove nodenv-npm-rehash/libexec from PATH to avoid infinite loops in `nodenv-which` (yyuu/pyenv#146)
+_PATH=":${PATH}:"
+_HERE="$(dirname "${BASH_SOURCE[0]}")" # remove this from PATH
+_PATH="${_PATH//:${_HERE}:/:}"
+_PATH="${_PATH#:}"
+_PATH="${_PATH%:}"
+PATH="${_PATH}"
+
+NODENV_COMMAND_PATH="$(nodenv-which "$(basename "$0")")"
+NODENV_BIN_PATH="${NODENV_COMMAND_PATH%/*}"
+
+export PATH="${NODENV_BIN_PATH}:${PATH}"
+
+STATUS=0
+"$NODENV_COMMAND_PATH" "$@" || STATUS="$?"
+
+# Run `nodenv-rehash` after a successful installation.
+if [ "$STATUS" == "0" ]; then
+  case "$1" in
+  "install" | "uninstall" ) nodenv-rehash;;
+  esac
+fi
+
+exit "$STATUS"
